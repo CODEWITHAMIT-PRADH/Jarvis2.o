@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dora Ultra Pro</title>
+
+<style>
+
+body{
+background:#020617;
+color:white;
+font-family:Arial;
+text-align:center;
+padding-top:80px;
+}
+
+h1{
+color:#22d3ee;
+font-size:40px;
+text-shadow:0 0 20px #22d3ee;
+}
+
+#orb{
+width:150px;
+height:150px;
+border-radius:50%;
+margin:auto;
+background:radial-gradient(circle,#22d3ee,#020617);
+box-shadow:0 0 40px #22d3ee;
+animation:pulse 2s infinite;
+}
+
+@keyframes pulse{
+0%{transform:scale(1)}
+50%{transform:scale(1.1)}
+100%{transform:scale(1)}
+}
+
+button{
+padding:12px 30px;
+font-size:18px;
+margin-top:20px;
+border:none;
+border-radius:10px;
+background:#22d3ee;
+cursor:pointer;
+}
+
+input{
+width:70%;
+padding:12px;
+margin-top:20px;
+border-radius:10px;
+border:none;
+font-size:16px;
+}
+
+#status{
+margin-top:20px;
+color:#94a3b8;
+}
+
+</style>
+</head>
+
+<body>
+
+<h1>Dora Ultra Pro</h1>
+
+<div id="orb"></div>
+
+<br>
+
+<button onclick="startListening()">🎤 Speak</button>
+
+<br>
+
+<input id="textCommand" placeholder="Type command here...">
+
+<button onclick="runTextCommand()">Run</button>
+
+<div id="status">Status: Idle</div>
+
+<script>
+
+const status = document.getElementById("status")
+
+const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition
+const recognition = new SpeechRecognition()
+
+recognition.lang="en-US"
+
+function speak(text){
+
+const speech = new SpeechSynthesisUtterance(text)
+speech.rate=1
+speech.pitch=1
+
+window.speechSynthesis.speak(speech)
+
+}
+
+function startListening(){
+
+status.innerText="Listening..."
+
+recognition.start()
+
+}
+
+recognition.onresult=function(event){
+
+let command = event.results[0][0].transcript.toLowerCase()
+
+handleCommand(command)
+
+}
+
+function runTextCommand(){
+
+let command = document.getElementById("textCommand").value.toLowerCase()
+
+handleCommand(command)
+
+}
+
+function handleCommand(command){
+
+status.innerText="Command: "+command
+
+if(command.includes("hey dora")){
+
+speak("Hello Boss. I am ready.")
+
+}
+
+else if(command.includes("open youtube")){
+
+speak("Opening YouTube Boss")
+window.open("https://youtube.com")
+
+}
+
+else if(command.includes("open google")){
+
+speak("Opening Google Boss")
+window.open("https://google.com")
+
+}
+
+else if(command.includes("open instagram")){
+
+speak("Opening Instagram Boss")
+window.open("https://instagram.com")
+
+}
+
+else if(command.includes("open whatsapp")){
+
+speak("Opening WhatsApp Boss")
+window.open("https://web.whatsapp.com")
+
+}
+
+else if(command.includes("time")){
+
+let time = new Date().toLocaleTimeString()
+
+speak("The time is "+time+" Boss")
+
+}
+
+else if(command.includes("date")){
+
+let date = new Date().toDateString()
+
+speak("Today is "+date+" Boss")
+
+}
+
+else if(command.includes("search")){
+
+let search = command.replace("search","")
+
+speak("Searching "+search)
+
+window.open("https://www.google.com/search?q="+search)
+
+}
+
+else if(command.includes("play")){
+
+let video = command.replace("play","")
+
+speak("Playing "+video+" on YouTube")
+
+window.open("https://www.youtube.com/results?search_query="+video)
+
+}
+
+else if(command.includes("weather")){
+
+getWeather()
+
+}
+
+else if(command.includes("open camera")){
+
+window.open("https://webcamtests.com")
+
+speak("Opening camera Boss")
+
+}
+
+else{
+
+speak("I'm still learning Boss")
+
+}
+
+}
+
+async function getWeather(){
+
+speak("Checking weather Boss")
+
+let city="Bhubaneswar"
+
+let url=`https://api.open-meteo.com/v1/forecast?latitude=20.2961&longitude=85.8245&current_weather=true`
+
+let res=await fetch(url)
+
+let data=await res.json()
+
+let temp=data.current_weather.temperature
+
+speak("Current temperature is "+temp+" degree celsius Boss")
+
+}
+
+</script>
+
+</body>
+</html>
