@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dora Ultra AI</title>
+
+<style>
+
+body{
+margin:0;
+background:#020617;
+font-family:Arial;
+color:white;
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+flex-direction:column;
+}
+
+h1{
+font-size:45px;
+color:#22d3ee;
+text-shadow:0 0 20px #22d3ee;
+}
+
+#orb{
+width:150px;
+height:150px;
+border-radius:50%;
+background:radial-gradient(circle,#22d3ee,#0f172a);
+box-shadow:0 0 40px #22d3ee;
+margin:30px;
+animation:pulse 2s infinite;
+}
+
+@keyframes pulse{
+0%{transform:scale(1)}
+50%{transform:scale(1.1)}
+100%{transform:scale(1)}
+}
+
+button{
+padding:15px 40px;
+font-size:18px;
+border:none;
+border-radius:10px;
+background:#22d3ee;
+cursor:pointer;
+}
+
+#status{
+margin-top:20px;
+color:#94a3b8;
+font-size:18px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>Dora Ultra AI</h1>
+
+<div id="orb"></div>
+
+<button onclick="startDora()">Activate Dora</button>
+
+<div id="status">Status: Idle</div>
+
+<script>
+
+const status = document.getElementById("status")
+
+const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition
+
+const recognition = new SpeechRecognition()
+
+recognition.lang = "en-US"
+
+let active = false
+
+function speak(text){
+
+const speech = new SpeechSynthesisUtterance(text)
+
+speech.rate = 1
+speech.pitch = 1
+
+window.speechSynthesis.speak(speech)
+
+}
+
+function startDora(){
+
+active = true
+speak("Dora Ultra AI Activated. Hello Boss.")
+status.innerText="Listening..."
+recognition.start()
+
+}
+
+recognition.onresult=function(event){
+
+let command = event.results[0][0].transcript.toLowerCase()
+
+status.innerText="Command: "+command
+
+if(command.includes("hey dora")){
+speak("Yes Boss, I'm listening")
+}
+
+else if(command.includes("open youtube")){
+speak("Opening YouTube, Boss")
+window.open("https://youtube.com","_blank")
+}
+
+else if(command.includes("open google")){
+speak("Opening Google, Boss")
+window.open("https://google.com","_blank")
+}
+
+else if(command.includes("open instagram")){
+speak("Opening Instagram, Boss")
+window.open("https://instagram.com","_blank")
+}
+
+else if(command.includes("time")){
+let time=new Date().toLocaleTimeString()
+speak("The time is "+time+" Boss")
+}
+
+else if(command.includes("date")){
+let date=new Date().toDateString()
+speak("Today is "+date+" Boss")
+}
+
+else if(command.includes("search")){
+let search=command.replace("search","")
+speak("Searching for "+search+" Boss")
+window.open(`https://www.google.com/search?q=${search}`)
+}
+
+else if(command.includes("play")){
+let video=command.replace("play","")
+speak("Playing "+video+" on YouTube Boss")
+window.open(`https://www.youtube.com/results?search_query=${video}`)
+}
+
+else if(command.includes("calculate")){
+let exp = command.replace("calculate","")
+let result = eval(exp)
+speak("The answer is "+result+" Boss")
+}
+
+else if(command.includes("who are you")){
+speak("I am Dora, your intelligent AI assistant. Always ready to help you Boss.")
+}
+
+else if(command.includes("help with coding")){
+speak("Sure Boss. I can help with HTML, CSS, JavaScript and Python.")
+}
+
+else{
+
+speak("I'm still learning, Boss.")
+
+}
+
+recognition.start()
+
+}
+
+</script>
+
+</body>
+
+</html>
